@@ -1,34 +1,27 @@
 import { Formik, Form, Field } from 'formik';
 import css from './Searchbar.module.css'
 import { BsSearch } from 'react-icons/bs'
-import { Component } from 'react';
- import { toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 
-export class Searchbar extends Component {
-  state = {
-   values:'',
-  }
-  
-  submitSerchbar = (values, actions) => {
-    this.setState({ values: values });
+export const Searchbar = ({ onSubmit }) => {
+  const submitSerchbar = (values, actions) => {
     if (values.serchText.trim() === '') {
       return toast.error('Please enter a query to search',
-                          {position: "top-center",
-                           autoClose: 2000,
-                          })
-    } 
-    this.props.onSubmit(values);
+        {
+          position: "top-center",
+          autoClose: 2000,
+        })
+    }
+    onSubmit(values.serchText);
     actions.resetForm()
   }
 
-  render() {
-    
     return (
       <header className={css.Searchbar}>
         <Formik
           initialValues={{ serchText: '' }}
-          onSubmit={this.submitSerchbar}
+          onSubmit={submitSerchbar}
         >
           <Form className={css.SearchForm}>
             <button type="submit" className={css.SearchForm_button}>
@@ -40,13 +33,10 @@ export class Searchbar extends Component {
               type="text"
               autoComplete="off"
               autoFocus
-              pattern="[A-Za-z0-9 ]*"
               placeholder="Search images and photos"
-            />
-            
+            /> 
           </Form>
         </Formik>
       </header>
     )
   }
-}

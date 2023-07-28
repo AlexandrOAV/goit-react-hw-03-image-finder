@@ -1,43 +1,69 @@
-// import { Audio } from 'react-loader-spinner'
-
-// import axios from 'axios';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Component } from "react";
 import { ImageGallery } from "./ImageGallery/ImageGallery";
 import { Searchbar } from "./Searchbar/Searchbar";
+import {getImage} from 'recuest/recuestApi';
 
-// const KEY = '34310450-164638d0ced594f3db31885e7';
-// const URL = 'https://pixabay.com/api/';
+import { Button } from './Button/Button';
+import { Loader } from './Searchbar/Loader/Loader';
+
+
 
 export class App extends Component {
-  state = {
-   textSerch:'',
-  //  id: '',
-  //  webformatURL: '', //посилання на маленьке зображення для списку карток
-  //  largeImageURL: '', //посилання на велике зображення для модального вікна
-  //  page: 1,
- }
-  componentDidMount() {
-   
-    //  this.setState({image:'rambo'})
-    //  axios.get(URL, {params:{key:KEY, q:this.state.image, page:1, per_page:12}}).then(response => {
-    //   console.log(response.data.hits)
-    // }).catch(error=>{  console.log('error: ', error);})
+state = {
+  textSerch: '',
+  hits:[],
+  page: 1,
+  isLoading: false, 
+  totalHits:0,
+  }
   
+  componentDidUpdate(_, prevState) {
+    const { textSerch, page } = this.state;
+    if (prevState.textSerch !== this.state.textSerch|| prevState.page !== page) {
+    this.addData(textSerch, page)
+    }
+  }  
+      
+  
+  addData = async (textSearch, page) => {
+    try {
+    this.setState({isLoading:true})
+    const newData = await getImage(textSearch, page);
+      this.setState(prevState => (
+        { hits: page === 1 ? newData.hits : [...prevState.hits, ...newData.hits],
+         totalHits: newData.totalHits }));
+    } catch (error) {
+       toast.error(`API NOT FAUND: ${error.message}`)
+    } finally { this.setState({isLoading:false})}
+   
+  } 
+
+  hendleSerchSubmit = (imageSerch) => {
+    if (this.state.textSerch !== imageSerch) {
+      this.setState({textSerch:imageSerch, page:1})
+    }
+    
   }
-  hendleSerchSubmit=(imageSerch)=>{
-    this.setState({textSerch:imageSerch})
+
+  clickInLoadMore = () => {
+    this.setState(prevState =>({page: prevState.page + 1}))
   }
+  
+ 
   render() {
-console.log('imageSerch: ', this.state.textSerch);
+    console.log(this.state.hits)
+    const { hits, textSerch, isLoading } = this.state;
        return (
          <div>
-            <ToastContainer/>
+          <ToastContainer position="top-center" autoClose={2000}/>
            <Searchbar onSubmit={this.hendleSerchSubmit} />
-           <ImageGallery position="top-center" autoClose={2000} />
-          
-    </div>
+           {isLoading&&<Loader/>}
+           <ImageGallery hits={hits} alt={textSerch} />
+           {hits.length>0 && <Button totalHits={this.state.totalHits} onClick={ this.clickInLoadMore} />}
+         </div>
+        
   );
   }
 };
