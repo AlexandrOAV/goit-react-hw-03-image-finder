@@ -6,11 +6,9 @@ const URL = 'https://pixabay.com/api/';
 const PER_PAGE = 12;
 export async function getImage(textValue, page) {
   try {
-    const response = await axios.get(URL, {params:{key:KEY, q:textValue, page:page, per_page:PER_PAGE}} );
+    const response = await axios(URL, {params:{key:KEY, q:textValue, page:page, per_page:PER_PAGE}} );
     const dataRespons = await response.data;  
-      console.log(response.data);
-
-      return dataRespons;
+    return dataRespons;
   } catch (error) {
       toast.error(`API not faund: ${error.message}`)
           throw new Error(error.message);

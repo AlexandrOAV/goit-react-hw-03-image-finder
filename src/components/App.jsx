@@ -41,6 +41,8 @@ state = {
   } 
 
   hendleSerchSubmit = (imageSerch) => {
+    console.log('imageSerch', imageSerch)
+    console.log('this.state.textSerch: ', this.state.textSerch);
     if (this.state.textSerch !== imageSerch) {
       this.setState({textSerch:imageSerch, page:1})
     }
@@ -53,14 +55,14 @@ state = {
   
  
   render() {
-    console.log(this.state.hits)
+    // console.log(this.state.hits)
     const { hits, textSerch, isLoading } = this.state;
        return (
          <div>
           <ToastContainer position="top-center" autoClose={2000}/>
            <Searchbar onSubmit={this.hendleSerchSubmit} />
            {isLoading&&<Loader/>}
-           <ImageGallery hits={hits} alt={textSerch} />
+           <ImageGallery hits={hits} alt={`image ${textSerch}`} />
            {hits.length>0 && <Button totalHits={this.state.totalHits} onClick={ this.clickInLoadMore} />}
          </div>
         

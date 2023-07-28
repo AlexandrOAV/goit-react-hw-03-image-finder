@@ -14,7 +14,7 @@ export const Searchbar = ({ onSubmit }) => {
         })
     }
     onSubmit(values.serchText);
-    actions.resetForm()
+     actions.resetForm();
   }
 
     return (
@@ -24,7 +24,7 @@ export const Searchbar = ({ onSubmit }) => {
           onSubmit={submitSerchbar}
         >
           <Form className={css.SearchForm}>
-            <button type="submit" className={css.SearchForm_button}>
+            <button type="submit" value='submit' className={css.SearchForm_button}>
               <BsSearch className={css.SearchForm_button_label} />
             </button>
             <Field
