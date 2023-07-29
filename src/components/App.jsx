@@ -7,6 +7,7 @@ import {getImage} from 'recuest/recuestApi';
 
 import { Button } from './Button/Button';
 import { Loader } from './Searchbar/Loader/Loader';
+import { Modal } from './Modal/Modal';
 
 
 
@@ -16,7 +17,9 @@ state = {
   hits:[],
   page: 1,
   isLoading: false, 
-  totalHits:0,
+  totalHits: 0,
+  showModal: false,
+  selectCart:null,
   }
   
   componentDidUpdate(_, prevState) {
@@ -41,8 +44,6 @@ state = {
   } 
 
   hendleSerchSubmit = (imageSerch) => {
-    console.log('imageSerch', imageSerch)
-    console.log('this.state.textSerch: ', this.state.textSerch);
     if (this.state.textSerch !== imageSerch) {
       this.setState({textSerch:imageSerch, page:1})
     }
@@ -53,19 +54,33 @@ state = {
     this.setState(prevState =>({page: prevState.page + 1}))
   }
   
- 
+  openModal = () => {
+   this.setState({showModal:true})
+  }
+
+  closeModal = () => {
+    this.setState({showModal:false})
+  }
+
+  handleImageClick = (selectCart) => {
+    this.setState({ selectCart, showModal:true });
+  };
+
   render() {
-    // console.log(this.state.hits)
-    const { hits, textSerch, isLoading } = this.state;
+    const { hits, textSerch, isLoading, totalHits, showModal, selectCart } = this.state;
+    const showButton = hits.length > 0 && hits.length < totalHits;
        return (
          <div>
           <ToastContainer position="top-center" autoClose={2000}/>
            <Searchbar onSubmit={this.hendleSerchSubmit} />
            {isLoading&&<Loader/>}
-           <ImageGallery hits={hits} alt={`image ${textSerch}`} />
-           {hits.length>0 && <Button totalHits={this.state.totalHits} onClick={ this.clickInLoadMore} />}
+           <ImageGallery
+             hits={hits}
+             alt={`image ${textSerch}`}
+             onClick={this.handleImageClick} />
+           {showButton && <Button totalHits={this.state.totalHits} onClick={this.clickInLoadMore} />}
+           {showModal && <Modal src={selectCart.largeImageURL} onClose={this.closeModal}  />}
          </div>
-        
   );
   }
 };
