@@ -79,7 +79,7 @@ state = {
              alt={`image ${textSerch}`}
              onClick={this.handleImageClick} />
            {showButton && <Button totalHits={this.state.totalHits} onClick={this.clickInLoadMore} />}
-           {showModal && <Modal src={selectCart.largeImageURL} onClose={this.closeModal}  />}
+           {showModal && <Modal src={selectCart.largeImageURL} alt={`Big image ${textSerch}`} onClose={this.closeModal}  />}
          </div>
   );
   }

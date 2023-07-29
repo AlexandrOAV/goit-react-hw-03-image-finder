@@ -23,12 +23,13 @@ export class Modal extends Component {
     }
 
     render() {
+        const {alt, src} = this.props
         return (
             <div className={css.Overlay} onClick={this.clickBackDrop}>
-  <div className={css.Modal}>
-    <img src={this.props.src} alt='{}' />
-  </div>
-</div>
+                <div className={css.Modal}>
+                     <img src={src} alt={alt} />
+                </div>
+            </div>
         )
     }
 }
